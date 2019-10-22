@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p>Hello this is from an HTML</p>
+    <p>안녕하세용!!!</p>
+    <a href="{{ MEDIA_URL }}about.html">About</a>
+    {% if boldmessage %}
+        <div>{{ boldmessage }}</div>
+    {% endif %}
+    {% if categories %}
+        <div class="categories">
+            <ul>
+                {% for category in categories %}
+                    <li>
+                        <div class="category">
+                            <p class="name">{{ category.name }}</p>
+                            <p class="views">Views: {{ category.views }}</p>
+                            <p class="likes">Categories: {{ category.likes }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <img src="{% static 'images/sana.jpeg' %}" alt="Picture of a Shiba">
+    <img src="{{ MEDIA_URL }}sanapenguin.jpeg" alt="">
+    
+</body>
+</html>
