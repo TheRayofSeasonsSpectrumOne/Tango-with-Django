@@ -1,14 +1,14 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load staticfiles %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% block local_styles%}
+    <link rel="stylesheet" href="{{ MEDIA_URL }}home.css">
+{% endblock %}
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
     <p>Hello this is from an HTML</p>
     <p>안녕하세용!!!</p>
     <a href="{{ MEDIA_URL }}about.html">About</a>
@@ -19,19 +19,39 @@
         <div class="categories">
             <ul>
                 {% for category in categories %}
-                    <li>
-                        <div class="category">
-                            <p class="name">{{ category.name }}</p>
-                            <p class="views">Views: {{ category.views }}</p>
-                            <p class="likes">Categories: {{ category.likes }}</p>
-                        </div>
-                    </li>
+                <li>
+                    <div class="category">
+                        <p class="name">{{ category.name }}</p>
+                        <p class="views">Views: {{ category.views }}</p>
+                        <p class="likes">Categories: {{ category.likes }}</p>
+                    </div>
+                </li>
                 {% endfor %}
             </ul>
         </div>
     {% endif %}
-    <img src="{% static 'images/sana.jpeg' %}" alt="Picture of a Shiba">
-    <img src="{{ MEDIA_URL }}sanapenguin.jpeg" alt="">
-    
-</body>
-</html>
+    <div class="leaderboards">
+        <div class="leaderboard">
+            <h1>Top Categories</h1>
+            {% if top_categories %}
+                {% for category in top_categories %}
+                <div class="card">
+                    <a href="/rango_app/category/{{ category.slug }}/">
+                        {{ category.name }}
+                    </a>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="leaderboard">
+            <h1>Top Pages</h1>
+            {% if top_pages %}
+                {% for page in top_pages %}
+                    <a href="{{ page.url }}">
+                        <div class="card">{{ page.title }}</div>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

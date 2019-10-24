@@ -1,0 +1,22 @@
+.leaderboards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.leaderboard {
+    height: 25rem;
+    width: 20rem;
+    box-shadow: 2px 2px 15px #1d1d1d;
+    border: 1px solid rgb(51, 51, 51);
+    border-radius: 20px 20px 20px 20px;
+    text-align: center;
+}
+
+.card {
+    width: 8rem;
+    margin-left: auto;
+    margin-right: auto; 
+    box-shadow: 2px 2px 15px #555555;
+    margin-top: 1rem;
+}
