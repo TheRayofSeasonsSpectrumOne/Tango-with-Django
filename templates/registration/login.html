@@ -1,0 +1,23 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block local_styles %}
+{% endblock %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-5">Login</h1>
+    <form id="login_form" class="form-group" method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Log In">
+        <input type="hidden" name="next" value={{ next }}>
+    </form>
+    <p>
+        Not a member?
+        <a href="{% url 'registration_register' %}">Register</a>
+    </p>
+{% endblock %}

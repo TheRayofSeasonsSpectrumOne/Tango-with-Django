@@ -1,31 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ MEDIA_URL }}global.css">
-    <title>Document</title>
-</head>
-<body>
-    <nav class="navbar">
-        <h1 class="navbar-brand">Rango</h1>
-        <div class="navbar-links">
-            <ul class="navbar-items">
-                <li class="navbar-item">
-                    <a href="/rango_app/home/" class="navbar-link">Home</a>
-                </li>
-                <li class="navbar-item">
-                    <a href="/rango_app/add_category/" class="navbar-link">
-                        Add a Category
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <h1>Add a Category</h1>
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block local_styles %}
+{% endblock %}
+
+{% block title %}
+    Add Category
+{% endblock %}
+
+{% block content %}
+    <!-- <h1>Add a Category</h1> -->
     <div>
-        <form id="category_form" method="post" action="/rango_app/add_category/">
+        <form id="category_form" method="post" action="{% url 'rango:add_category' %}">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
@@ -38,5 +24,4 @@
             <input type="submit" name="submit" value="Create Category">
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

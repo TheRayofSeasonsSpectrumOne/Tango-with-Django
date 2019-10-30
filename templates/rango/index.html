@@ -1,19 +1,29 @@
 {% extends 'rango/base.html' %}
 {% load staticfiles %}
 
-{% block local_styles%}
+{% block local_styles %}
     <link rel="stylesheet" href="{{ MEDIA_URL }}home.css">
 {% endblock %}
+
 {% block title %}
     Home
 {% endblock %}
 
 {% block content %}
-    <p>Hello this is from an HTML</p>
-    <p>안녕하세용!!!</p>
-    <a href="{{ MEDIA_URL }}about.html">About</a>
-    {% if boldmessage %}
-        <div>{{ boldmessage }}</div>
+    {% if user.is_authenticated %}
+    <div class="jumbotron p-4">
+        <div class="container">
+            <h1 class="jumbotron-heading">
+                Rango says...
+            </h1>
+            <h2 class="h2">
+                Howdy {{ user.username }}! Hey there, partner!
+            </h2>
+            {% if boldmessage %}
+                <div>{{ boldmessage }}</div>
+            {% endif %}
+        </div>
+    </div>
     {% endif %}
     {% if categories %}
         <div class="categories">
@@ -30,28 +40,52 @@
             </ul>
         </div>
     {% endif %}
-    <div class="leaderboards">
-        <div class="leaderboard">
-            <h1>Top Categories</h1>
-            {% if top_categories %}
-                {% for category in top_categories %}
-                <div class="card">
-                    <a href="/rango_app/category/{{ category.slug }}/">
-                        {{ category.name }}
-                    </a>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-6 w-100">
+                    <div class="card-body">
+                        <h2>Most Liked Categories</h2>
+                        <p class="card-text">
+                            {% if top_categories %}
+                                <ul>
+                                    {% for category in top_categories %}
+                                    <li>
+                                        <a href="{% url 'rango:show_category' category.slug %}">
+                                            {{ category.name }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <strong>There are no categories present.</strong>
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-        <div class="leaderboard">
-            <h1>Top Pages</h1>
-            {% if top_pages %}
-                {% for page in top_pages %}
-                    <a href="{{ page.url }}">
-                        <div class="card">{{ page.title }}</div>
-                    </a>
-                {% endfor %}
-            {% endif %}
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-6 w-100">
+                    <div class="card-body">
+                        <h2>Most Liked Pages</h2>
+                        <p class="card-text">
+                            {% if top_pages %}
+                                <ul>
+                                    {% for page in top_pages %}
+                                    <li>
+                                        <a href="{{ page.url }}">
+                                            <div>{{ page.title }}</div>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <strong>There are no pages present.</strong>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

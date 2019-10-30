@@ -1,5 +1,5 @@
 from django import forms
-from rango_app.models import Category, Page
+from rango_app.models import Category, Page, UserProfile
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length=128, 
@@ -22,7 +22,6 @@ class PageForm(forms.ModelForm):
     class Meta:
         model = Page
         fields = ('title', 'url', 'views')
-        # exclude = ('category',)
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -33,3 +32,16 @@ class PageForm(forms.ModelForm):
             cleaned_data['url'] = url
 
             return cleaned_data
+
+class UserProfileForm(forms.ModelForm):
+    website = forms.URLField(required=False)
+    picture = forms.ImageField(required=False)
+    
+    class Meta:
+        model = UserProfile
+        exclude = ('user',)
+
+    def clean(self):
+        print('wow')
+
+

@@ -12,11 +12,3 @@
     border-radius: 20px 20px 20px 20px;
     text-align: center;
 }
-
-.card {
-    width: 8rem;
-    margin-left: auto;
-    margin-right: auto; 
-    box-shadow: 2px 2px 15px #555555;
-    margin-top: 1rem;
-}

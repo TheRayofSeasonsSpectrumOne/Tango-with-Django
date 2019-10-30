@@ -1,0 +1,21 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block local_styles %}
+{% endblock %}
+
+{% block title %}
+    About
+{% endblock %}
+
+{% block content %}
+    <div>
+        <p>You have visited this site {{ visits }} 
+        {% if visits == 1 %}
+            time
+        {% else %}
+            times
+        {% endif %}
+        </p>
+    </div>
+{% endblock %}
