@@ -13,20 +13,20 @@ MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# key = None
-# with open ('/home/TheRayofSeasonsSpectrumOne/secret.key') as f:
-#     key = f.read().strip()
-SECRET_KEY = 'j!+pn0!0_n3l95tci!ea(a&l)d9g$syq-adh!924vyu%gvxc36'
+key = None
+with open ('/home/TheRayofSeasonsSpectrumOne/secret.key') as f:
+    key = f.read().strip()
+SECRET_KEY = key
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 ALLOWED_HOSTS = [
-    # 'https://therayofseasonsspectrumone.pythonanywhere.com',
-    # 'http://therayofseasonsspectrumone.pythonanywhere.com',
-    # 'therayofseasonsspectrumone.pythonanywhere.com',
+    'https://therayofseasonsspectrumone.pythonanywhere.com',
+    'http://therayofseasonsspectrumone.pythonanywhere.com',
+    'therayofseasonsspectrumone.pythonanywhere.com',
 ]
 
 
