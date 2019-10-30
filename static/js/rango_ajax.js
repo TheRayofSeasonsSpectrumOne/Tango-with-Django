@@ -1,6 +1,6 @@
 $('#likes').click(function() {
     const catid = $(this).attr('data-catid');
-    $.get('/rango_app/like/', 
+    $.get('/rango/like/', 
         {category_id: catid},
         function(data) {
             $('#like_count').html(data);
@@ -11,7 +11,7 @@ $('#likes').click(function() {
 
 $('#suggestion').keyup(function() {
     const query = $(this).val();
-    $.get('/rango_app/suggest/', 
+    $.get('/rango/suggest/', 
         {suggestion: query},
         function(data) {
             $('#cats').html(data);
@@ -24,7 +24,7 @@ $('.rango-add').click(function() {
     const url = $(this).attr("data-url");
     const title = $(this).attr("data-title");
     const me = $(this);
-    $.get('/rango_app/add/',
+    $.get('/rango/add/',
         {
             category_id: catid,
             url: url,
