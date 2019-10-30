@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.generic import RedirectView
 from registration.backends.simple.views import RegistrationView
 
 from rango_app import views
@@ -12,8 +13,9 @@ class MyRegistrationView(RegistrationView):
         return reverse('rango:register_profile')
 
 urlpatterns = [
+    url(r'^$', RedirectView.as_view(url='/rango/home/')),
     url(r'^admin/', admin.site.urls),
-    url(r'rango_app/', include('rango_app.urls')),
+    url(r'rango/', include('rango_app.urls')),
     url('account/', include('registration.backends.simple.urls')),
     url('accounts/register',
         MyRegistrationView.as_view(),

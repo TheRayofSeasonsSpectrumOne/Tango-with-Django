@@ -31,11 +31,9 @@ def visitor_cookie_handler(request):
     )
 
     if(datetime.now() - last_visit_time).days > 0:
-        print("Visits Incremented")
         visits += 1
         request.session['last_visit'] = str(datetime.now())
     else:
-        print("Last Visit Cookie")
         request.session['last_visit'] = last_visit_cookie
 
     request.session['visits'] = visits
@@ -47,7 +45,6 @@ class IndexView(View):
         page_list = Page.objects.order_by('-views')[:5]
         visitor_cookie_handler(request)
         context_dict = {
-            'boldmessage': 'crunchy',
             'top_categories': category_list,
             'top_pages': page_list,
             'visits': request.session['visits'],
@@ -91,7 +88,7 @@ class ProfileView(View):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            return redirect('/rango_app/home/')
+            return IndexView.as_view()(self.request)
 
         userprofile = UserProfile.objects.get_or_create(user=user)[0]
         form = UserProfileForm({'website': userprofile.website, 
@@ -263,8 +260,6 @@ class SearchView(View):
 
 # if error occurs in goto, reinitialize url for post
 class Goto_Url(View):
-    url = '/rango_app/home'
-
     def get(self, request):
         page_id = None
 
@@ -275,14 +270,14 @@ class Goto_Url(View):
                 page = Page.objects.get(id=page_id)
                 page.views += 1
                 page.save()
-                self.url = page.url
+                return redirect(page.url)
             except:
                 pass
 
-        return redirect(self.url)
+        return IndexView.as_view()(self.request)
 
     def post(self, request):
-        return redirect(self.url)
+        return IndexView.as_view()(self.request)
 
 class RegisterProfile(View):
 
@@ -303,7 +298,7 @@ class RegisterProfile(View):
             user_profile.user = request.user
             user_profile.save()
 
-            return redirect('/rango_app/home/')
+            return IndexView.as_view()(self.request)
         else:
             print(form.errors)
         
