@@ -134,7 +134,7 @@ REGISTRAION_AUTO_LOGIN = True
 
 LOGIN_URL = '/accounts/login/'
 
-LOGIN_REDIRECT_URL = '/rango_app/home/'
+LOGIN_REDIRECT_URL = '/rango/home/'
 
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
