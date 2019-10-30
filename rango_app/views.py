@@ -31,11 +31,9 @@ def visitor_cookie_handler(request):
     )
 
     if(datetime.now() - last_visit_time).days > 0:
-        print("Visits Incremented")
         visits += 1
         request.session['last_visit'] = str(datetime.now())
     else:
-        print("Last Visit Cookie")
         request.session['last_visit'] = last_visit_cookie
 
     request.session['visits'] = visits
@@ -47,7 +45,6 @@ class IndexView(View):
         page_list = Page.objects.order_by('-views')[:5]
         visitor_cookie_handler(request)
         context_dict = {
-            'boldmessage': 'crunchy',
             'top_categories': category_list,
             'top_pages': page_list,
             'visits': request.session['visits'],
