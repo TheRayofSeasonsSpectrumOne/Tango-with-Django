@@ -182,12 +182,13 @@ class ShowCategoryView(View):
         result_list = []
 
         self.insert_category_context(request, context, category_name_slug)
-        query = request.POST['query'].strip()
+        if(request.POST['query']):
+            query = request.POST['query'].strip()
 
-        if query:
-            result_list = google_search(query)
-            context['query'] = query
-            context['result_list'] = result_list
+            if query:
+                result_list = google_search(query)
+                context['query'] = query
+                context['result_list'] = result_list
         self.increment_category_views(category_name_slug)
 
         return render(request, "rango/category.html", context)
@@ -225,7 +226,8 @@ class AddPageView(View):
                     page.category = category
                     page.views = 0
                     page.save()
-                    return ShowCategoryView(request, category_name_slug)
+                    self.request.method = "GET"
+                    return ShowCategoryView.as_view()(self.request, category_name_slug)
                 else:
                     print(form.errors)
 
