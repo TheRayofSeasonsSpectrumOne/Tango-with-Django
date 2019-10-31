@@ -319,10 +319,8 @@ class ListProfiles(View):
 
 class SearchProfiles(View):
     def get(self, request):
-        print('searching profiles')
         context = {}
         starts_with = request.GET['search']
-        print(starts_with)
 
         if len(starts_with) == 0:
             context['userprofile_list'] = UserProfile.objects.all()
