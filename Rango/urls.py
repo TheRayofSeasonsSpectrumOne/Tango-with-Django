@@ -14,7 +14,7 @@ class MyRegistrationView(RegistrationView):
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/rango/home/')),
-    url(r'^admin/', admin.site.urls),
+    # url(r'^admin/', admin.site.urls),
     url(r'rango/', include('rango_app.urls')),
     url('account/', include('registration.backends.simple.urls')),
     url('accounts/register',
