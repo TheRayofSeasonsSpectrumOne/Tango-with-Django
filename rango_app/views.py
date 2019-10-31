@@ -41,12 +41,12 @@ def visitor_cookie_handler(request):
 # views
 class IndexView(View):
     def view(self, request):
-        category_list = Category.objects.order_by('-views')[:5]
-        page_list = Page.objects.order_by('-views')[:5]
+        top_viewed_categories = Category.objects.order_by('-views')[:5]
+        top_viewed_pages = Page.objects.order_by('-views')[:5]
         visitor_cookie_handler(request)
         context_dict = {
-            'top_categories': category_list,
-            'top_pages': page_list,
+            'top_viewed_categories': top_viewed_categories,
+            'top_viewed_pages': top_viewed_pages,
             'visits': request.session['visits'],
             'last_visit': request.session['last_visit'],
         }
