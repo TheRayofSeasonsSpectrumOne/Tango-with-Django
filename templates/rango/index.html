@@ -22,31 +22,16 @@
         </div>
     </div>
     {% endif %}
-    {% if categories %}
-        <div class="categories">
-            <ul>
-                {% for category in categories %}
-                <li>
-                    <div class="category">
-                        <p class="name">{{ category.name }}</p>
-                        <p class="views">Views: {{ category.views }}</p>
-                        <p class="likes">Categories: {{ category.likes }}</p>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
     <div class="container">
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-6 w-100">
                     <div class="card-body">
-                        <h2>Most Liked Categories</h2>
+                        <h2>Most Viewed Categories</h2>
                         <p class="card-text">
-                            {% if top_categories %}
+                            {% if top_viewed_categories %}
                                 <ul>
-                                    {% for category in top_categories %}
+                                    {% for category in top_viewed_categories %}
                                     <li>
                                         <a href="{% url 'rango:show_category' category.slug %}">
                                             {{ category.name }}
@@ -64,11 +49,11 @@
             <div class="col-md-6">
                 <div class="card mb-6 w-100">
                     <div class="card-body">
-                        <h2>Most Liked Pages</h2>
+                        <h2>Most Viewed Pages</h2>
                         <p class="card-text">
-                            {% if top_pages %}
+                            {% if top_viewed_pages %}
                                 <ul>
-                                    {% for page in top_pages %}
+                                    {% for page in top_viewed_pages %}
                                     <li>
                                         <a href="{{ page.url }}">
                                             <div>{{ page.title }}</div>
