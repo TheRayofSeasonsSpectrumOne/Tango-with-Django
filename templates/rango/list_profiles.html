@@ -17,21 +17,18 @@
     <div class="container">
         <div class="row">
             {% if userprofile_list %}
-                <div class="panel-heading">
-                    <div class="panel-body">
-                        <div class="panel-list-group">
-                            {% for listuser in userprofile_list %}
-                                <div class="list-group-item">
-                                    <h4 class="list-group-item-heading">
-                                        <a href="{% url 'rango:profile' listuser.user.username %}">
-                                            {{ listuser.user.username }}
-                                        </a>
-                                    </h4>
-                                </div>
-                            {% endfor %}
-                        </div>
+                {% for listuser in userprofile_list %}
+                    <div class="list-group-item d-flex justify-content-between w-50">
+                        <img src="{{ MEDIA_URL }}{{ listuser.picture }}" 
+                            width="50"
+                            height="50">
+                        <h4 class="list-group-item-heading">
+                            <a href="{% url 'rango:profile' listuser.user.username %}">
+                                {{ listuser.user.username }}
+                            </a>
+                        </h4>
                     </div>
-                </div>
+                {% endfor %}
             {% else %}
                 <p>There are no users for the site yet.</p>
             {% endif %}
