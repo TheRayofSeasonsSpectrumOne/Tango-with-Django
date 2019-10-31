@@ -13,6 +13,7 @@
         crossorigin="anonymous">
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css"
         rel="stylesheet">
+    <link href="{% static 'css/global.css' %}" rel="stylesheet" >
     
     {% block local_styles %}
     {% endblock %}
@@ -43,6 +44,9 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'rango:list_profiles' %}">List Profile</a>
+                    </li>
+                    <li class="nav-item categories-link">
+                        <a class="nav-link" href="{% url 'rango:categories' %}">Categories</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a>

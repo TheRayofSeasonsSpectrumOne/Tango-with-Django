@@ -192,6 +192,11 @@ class ShowCategoryView(View):
 
         return render(request, "rango/category.html", context)
 
+class CheckAllCategories(View):
+    def get(self, request):
+        context = { 'categories': Category.objects.order_by('-views')}
+        return render(request, "rango/categories.html", context)
+
 class AddPageView(View):
     def get(self, request, category_name_slug):
         try:
