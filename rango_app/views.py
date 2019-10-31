@@ -314,8 +314,28 @@ class ListProfiles(View):
     @method_decorator(login_required)
     def get(self, request):
         userprofile_list = UserProfile.objects.all()
-        return render(request, 'rango/list_profiles.html', 
-            {'userprofile_list': userprofile_list})
+        context = {'userprofile_list': userprofile_list}
+        return render(request, 'rango/list_profiles.html', context)
+
+class SearchProfiles(View):
+    def get(self, request):
+        print('searching profiles')
+        context = {}
+        starts_with = request.GET['search']
+        print(starts_with)
+
+        if len(starts_with) == 0:
+            context['userprofile_list'] = UserProfile.objects.all()
+        else:
+            users = UserProfile.objects.all()
+            filtered = []
+            for user in users:
+                if str(user).lower().startswith(starts_with.lower()):
+                    filtered.append(user)
+
+            context['userprofile_list'] = filtered
+
+        return render(request, 'rango/profile_collection.html', context)
 
 class LikeCategory(View):
     @method_decorator(login_required)
@@ -348,9 +368,7 @@ class SuggestCategoryView(View):
     def get(self, request):
         cat_list = []
         starts_with = ''
-
-        if request.method == 'GET':
-            starts_with = request.GET['suggestion']  
+        starts_with = request.GET['suggestion']  
 
         cat_list = self.get_category_list(8, starts_with)
         if len(cat_list) == 0:

@@ -14,6 +14,7 @@ from rango_app.views import (
     RegisterProfile,
     ProfileView, 
     ListProfiles,
+    SearchProfiles,
     LikeCategory,
     SuggestCategoryView,
 ) 
@@ -36,6 +37,7 @@ urlpatterns = [
     url('register_profile/', RegisterProfile.as_view(), name="register_profile"),
     url(r'profile/(?P<username>[\w\-]+)/$', ProfileView.as_view(), name="profile"),
     url('profiles/', ListProfiles.as_view(), name="list_profiles"),
+    url('search_profile/$', SearchProfiles.as_view(), name="search_profile"),
     url('like/$', LikeCategory.as_view(), name="like_category"),
     url('suggest/$', SuggestCategoryView.as_view(), name="suggest_category"),
 ]

@@ -19,6 +19,16 @@ $('#suggestion').keyup(function() {
     );
 });
 
+$('#search-profile').keyup(function() {
+    const query = $(this).val()
+    $.get('/rango/search_profile/',
+        { search: query },
+        function(data) {
+            $('#list-profiles').html(data)
+        }
+    )
+})
+
 $('.rango-add').click(function() {
     const catid = $(this).attr("data-catid");
     const url = $(this).attr("data-url");

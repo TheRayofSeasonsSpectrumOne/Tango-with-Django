@@ -1,5 +1,6 @@
 from django import template
-from rango_app.models import Category, Page
+from django.contrib.auth.models import User
+from rango_app.models import Category, Page, UserProfile
 
 register = template.Library()
 
@@ -14,4 +15,10 @@ def get_category_list(category=None):
 def get_page_list(category=None):
     return {
         "pages": Page.objects.filter(category=category).order_by('-views')
+    }
+
+@register.inclusion_tag('rango/profile_collection.html')
+def get_profile_list():
+    return {
+        "userprofile_list": UserProfile.objects.all()
     }

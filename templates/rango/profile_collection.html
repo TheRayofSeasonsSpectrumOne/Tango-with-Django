@@ -1,0 +1,19 @@
+{% load staticfiles %}
+{% load rango_template_tags %}
+
+{% if userprofile_list %}
+    {% for listuser in userprofile_list %}
+        <a href="{% url 'rango:profile' listuser.user.username %}" 
+            class="list-group-item d-flex
+                justify-content-between w-50">
+            <img src="/media/{{ listuser.picture }}" 
+                width="50"
+                height="50">
+            <h4 class="list-group-item-heading">
+                {{ listuser.user.username }}
+            </h4>
+        </a>
+    {% endfor %}
+{% else %}
+    <p>There are no users for the site yet.</p>
+{% endif %}
