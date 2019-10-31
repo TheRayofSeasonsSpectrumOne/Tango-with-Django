@@ -17,8 +17,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'rango/', include('rango_app.urls')),
     url('account/', include('registration.backends.simple.urls')),
-    url('accounts/register', 
-        MyRegistrationView.as_view(), 
+    url('accounts/register',
+        MyRegistrationView.as_view(),
         name="registration_register"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
