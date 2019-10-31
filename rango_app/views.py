@@ -20,7 +20,6 @@ def get_server_side_cookie(request, cookie, default_val=None):
 
 def visitor_cookie_handler(request):
     visits = int(get_server_side_cookie(request, 'visits', '1'))
-
     last_visit_cookie = get_server_side_cookie(
         request, 
         'last_visit', 
@@ -44,13 +43,14 @@ class IndexView(View):
         top_viewed_categories = Category.objects.order_by('-views')[:5]
         top_viewed_pages = Page.objects.order_by('-views')[:5]
         visitor_cookie_handler(request)
-        context_dict = {
+        context = {
             'top_viewed_categories': top_viewed_categories,
             'top_viewed_pages': top_viewed_pages,
             'visits': request.session['visits'],
             'last_visit': request.session['last_visit'],
         }
-        return render(request, 'rango/index.html', context=context_dict)
+
+        return render(request, 'rango/index.html', context)
 
     def get(self, request):
         return self.view(request)
@@ -61,8 +61,14 @@ class IndexView(View):
 class AboutView(View):
     def get(self, request):
         visitor_cookie_handler(request)
-        return render(request, 'rango/about.html', 
-            context={'visits': request.session['visits']})
+        context = {
+            'visits': request.session['visits'],
+            'description': """Rango is a site where you 'rango' links into so
+             that other people may see. Basically, a link sharing site.
+            """
+        }
+
+        return render(request, 'rango/about.html', context)
 
 class AddCategoryView(View):
 
@@ -107,23 +113,21 @@ class ProfileView(View):
     @method_decorator(login_required)
     def get(self, request, username):
         (user, userprofile, form) = self.get_user_details(username)
-
-        context_dict = {
+        context = {
             'userprofile': userprofile,
             'selecteduser': user,
             'fixed_name': self.fix_name(user.username),
             'form': form
         }
         
-        return render(request, 'rango/profile.html', context_dict)
+        return render(request, 'rango/profile.html', context)
 
     @method_decorator(login_required)
     def post(self, request, username):
         (user, userprofile, form) = self.get_user_details(username)
         form = UserProfileForm(request.POST, 
             request.FILES, instance=userprofile)
-
-        context_dict = {
+        context = {
             'userprofile': userprofile,
             'selecteduser': user,
             'fixed_name': self.fix_name(user.username),
@@ -135,13 +139,13 @@ class ProfileView(View):
         else:
             print(form.errors)
 
-        return render(request, 'rango/profile.html', context_dict)
+        return render(request, 'rango/profile.html', context)
 
 class GetCategoriesView(View):
     def get(self, request):
         category_list = Category.objects.all()
-        context_dict = { 'categories': category_list }
-        return render(request, 'rango/categories.html', context_dict)
+        context = { 'categories': category_list }
+        return render(request, 'rango/categories.html', context)
 
 class ShowCategoryView(View):
 
@@ -166,27 +170,27 @@ class ShowCategoryView(View):
             category = None
 
     def get(self, request, category_name_slug):
-        context_dict = {}
+        context = {}
 
-        self.insert_category_context(request, context_dict, category_name_slug)
+        self.insert_category_context(request, context, category_name_slug)
         self.increment_category_views(category_name_slug)
 
-        return render(request, "rango/category.html", context_dict)
+        return render(request, "rango/category.html", context)
 
     def post(self, request, category_name_slug):
-        context_dict = {}
+        context = {}
         result_list = []
 
-        self.insert_category_context(request, context_dict, category_name_slug)
+        self.insert_category_context(request, context, category_name_slug)
         query = request.POST['query'].strip()
 
         if query:
             result_list = google_search(query)
-            context_dict['query'] = query
-            context_dict['result_list'] = result_list
+            context['query'] = query
+            context['result_list'] = result_list
         self.increment_category_views(category_name_slug)
 
-        return render(request, "rango/category.html", context_dict)
+        return render(request, "rango/category.html", context)
 
 class AddPageView(View):
     def get(self, request, category_name_slug):
@@ -197,8 +201,8 @@ class AddPageView(View):
 
         form = PageForm()
 
-        context_dict = { 'form': form, 'category': category }
-        return render(request, 'rango/add_page.html', context_dict)
+        context = { 'form': form, 'category': category }
+        return render(request, 'rango/add_page.html', context)
 
     def post(self, request, category_name_slug):
         try:
@@ -220,8 +224,8 @@ class AddPageView(View):
                 else:
                     print(form.errors)
 
-        context_dict = { 'form': form, 'category': category }
-        return render(request, 'rango/add_page.html', context_dict)
+        context = { 'form': form, 'category': category }
+        return render(request, 'rango/add_page.html', context)
 
 class AutoAddPageView(View):
     @method_decorator(login_required)
@@ -229,7 +233,7 @@ class AutoAddPageView(View):
         cat_id = None
         url = None
         title = None
-        context_dict = {}
+        context = {}
 
         cat_id = request.GET['category_id']
         url = request.GET['url']
@@ -244,19 +248,19 @@ class AutoAddPageView(View):
             )
 
             pages = Page.objects.filter(category=category).order_by('-views')
-            context_dict['pages'] = pages
+            context['pages'] = pages
 
-        return render(request, 'rango/page_list.html', context_dict)
+        return render(request, 'rango/page_list.html', context)
 
 class SearchView(View):
     def post(self, request):
         search_term = request.POST['search_term']
-        context_dict = {
+        context = {
             'search_term': search_term,
             'results': google_search(search_term)
         }
 
-        return render(request, "rango/search.html", context_dict)
+        return render(request, "rango/search.html", context)
 
 # if error occurs in goto, reinitialize url for post
 class Goto_Url(View):
@@ -284,9 +288,9 @@ class RegisterProfile(View):
     @method_decorator(login_required)
     def get(self, request):
         form = UserProfileForm()
-        context_dict = { 'form': form }
+        context = { 'form': form }
 
-        return render(request, 'rango/profile_registration.html', context_dict)
+        return render(request, 'rango/profile_registration.html', context)
 
     @method_decorator(login_required)
     def post(self, request):
@@ -302,9 +306,9 @@ class RegisterProfile(View):
         else:
             print(form.errors)
         
-        context_dict = { 'form': form }
+        context = { 'form': form }
 
-        return render(request, 'rango/profile_registration.html', context_dict)
+        return render(request, 'rango/profile_registration.html', context)
 
 class ListProfiles(View):
     @method_decorator(login_required)
@@ -352,8 +356,8 @@ class SuggestCategoryView(View):
         if len(cat_list) == 0:
             cat_list = Category.objects.order_by('-likes')
 
-        context_dict = {
+        context = {
             'categories': cat_list
         }
 
-        return render(request, 'rango/category_list.html', context_dict)
+        return render(request, 'rango/category_list.html', context)
