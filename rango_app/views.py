@@ -377,7 +377,7 @@ class SuggestCategoryView(View):
 
         cat_list = self.get_category_list(8, starts_with)
         if len(cat_list) == 0:
-            cat_list = Category.objects.order_by('-likes')
+            cat_list = Category.objects.order_by('-views')
 
         context = {
             'categories': cat_list
