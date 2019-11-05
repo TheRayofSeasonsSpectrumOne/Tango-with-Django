@@ -82,7 +82,7 @@
                             aria-haspopup="true" aria-expanded="false">
                             {{ user.username }}
                         </a>
-                        <div class="dropdown-menu gray-on-dark" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu gray-on-dark dropdown-menu-right" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'rango:profile' user.username %}">Profile</a>
                             <a class="dropdown-item" href="{% url 'rango:settings' user.username %}">Settings</a>
                             <div class="dropdown-divider" href=""></div>
@@ -127,11 +127,19 @@
                     {% endblock %}
                 </div>
                 <footer>
+                {% if theme.background_image %}
+                    <div class="jumbotron p-4 gray-on-dark">
+                        <div class="container">
+                {% endif %}
                     <p class="float-right"><a href="#">Back to Top</a></p>
                     <p>&copy; 2019 Tango with Django 2 &middot; 
                         <a href="#">Privacy</a> &middot;</p>
                         <a href="#">Terms</a>
                     </p>
+                {% if theme.background_image %}
+                        </div>
+                    </div>
+                {% endif %}
                 </footer>
             </main>
         </div>        

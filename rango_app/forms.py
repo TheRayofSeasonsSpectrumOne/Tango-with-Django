@@ -50,7 +50,7 @@ class UserProfileForm(forms.ModelForm):
 
 class ThemeForm(forms.ModelForm):
     background_image = forms.ImageField(required=False, 
-        help_text="Background Image")
+        help_text="Background Image (Beta): ")
     dark_mode = forms.BooleanField(required=False, initial=False, 
         help_text="Dark Mode")
 

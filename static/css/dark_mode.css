@@ -20,5 +20,5 @@ input[type="url"], input[type="url"]:focus {
 }
 
 nav li a:not(.active){
-    color: white !important;
+    color: #ffffff !important;
 }
