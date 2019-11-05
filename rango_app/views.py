@@ -359,13 +359,11 @@ class RegisterProfile(View):
     def post(self, request):
         form = UserProfileForm()
 
-        form = UserProfileForm(request.POST, request.FILES)
+        userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
+        form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
         if form.is_valid():
-            user_profile = form.save(commit=False)
-            user_profile.user = request.user
-            user_profile.save()
-
-            return redirect('goto/')
+            form.save(commit=True)
+            return IndexView.as_view()(self.request)
         else:
             print(form.errors)
         
