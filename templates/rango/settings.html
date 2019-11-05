@@ -9,17 +9,24 @@
 {% endblock %}
 
 {% block content %}
-    <form id="theme_form" method="post" action="{% url 'rango:settings' user.username %}">
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-            <br>
-        {% endfor %}
-        <input type="submit" name="submit" value="Save">
-    </form>
+    <div class="card container p-5">
+        <img src="{{ MEDIA_URL }}{{ theme.background_image }}" 
+            width="300"
+            alt="{{ selecteduser.username }}">
+        <form id="theme_form" method="post" 
+            action="{% url 'rango:settings' user.username %}"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+                <br>
+            {% endfor %}
+            <input type="submit" name="submit" value="Save">
+        </form>
+    </div>
 {% endblock %}

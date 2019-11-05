@@ -23,8 +23,8 @@
         {% endif %}
 
         <style>
-            :root {
-                background-image: url("{{ MEDIA_URL }}{{ background_image }}")
+            :root, .content-body {
+                background-image: url("{{ MEDIA_URL }}{{ theme.background_image }}")
             }
         </style>
     {% endif %}
@@ -122,7 +122,7 @@
                 </div>
             </nav>
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="container mb-5">
+                <div class="main-content container mb-5">
                     {% block content %}
                     {% endblock %}
                 </div>

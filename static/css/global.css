@@ -1,3 +1,16 @@
+.main-content, .content-body {
+    position: relative;
+    min-height: 100vh;
+    opacity: 0;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;            /* Footer height */
+}
+
 @media only screen and (min-width: 768px) {
     .categories-link {
         display: none

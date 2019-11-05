@@ -35,7 +35,7 @@ def render_with_user(request, template, context={}, username=''):
 
         context['current_user'] = current_user
         context['dark_mode'] = theme.dark_mode
-        context['background_image'] = theme.background_image
+        context['theme'] = theme
     except User.DoesNotExist:
         pass
 
