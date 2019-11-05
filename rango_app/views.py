@@ -96,7 +96,6 @@ class SettingsView(View):
         form = ThemeForm({ 'dark_mode': theme.dark_mode })
 
         context = { 'form': form }
-        print(theme.dark_mode)
         return render_with_user(request, 'rango/settings.html', 
             context=context, username=username)
 
@@ -111,7 +110,6 @@ class SettingsView(View):
             print(form.errors)
 
         context = { 'form': form }
-        print(theme.dark_mode)
 
         return render_with_user(request, 'rango/settings.html', 
             context=context, username=username)
@@ -367,7 +365,7 @@ class RegisterProfile(View):
             user_profile.user = request.user
             user_profile.save()
 
-            return IndexView.as_view()(self.request)
+            return redirect('goto/')
         else:
             print(form.errors)
         
