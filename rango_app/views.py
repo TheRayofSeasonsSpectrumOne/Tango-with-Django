@@ -77,9 +77,7 @@ class IndexView(View):
             'top_viewed_categories': top_viewed_categories,
             'top_viewed_pages': top_viewed_pages,
             'visits': request.session['visits'],
-            'last_visit': request.session['last_visit'],
-            'dark_mode': request.COOKIES['dark_mode']
-            # 'current_user': request.session['current_user']
+            'last_visit': request.session['last_visit']
         }
 
         return render_with_user(request, 'rango/index.html', context)
