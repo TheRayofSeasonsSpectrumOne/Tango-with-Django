@@ -46,6 +46,33 @@ $('.rango-add').click(function() {
         })
 })
 
+$('#dark-mode').change(function() {
+    console.log('henlo')
+    console.log($(this).is(':checked'))
+    $.get('/rango/update_settings/',
+        {
+            darkmode: $(this).is(':checked')
+        },
+        function(data) {
+            // $.cookie('dark_mode', false)
+            $('.henlo').html(data)
+        }
+    )
+});
+
+// $('#dark-mode').click(function() {
+//     $.ajax({
+//         type: 'POST',
+//         url: '/rango/settings/',
+//         data: {
+//             dark_mode: $('#dark-mode').val()
+//         },
+//         success: function() {
+
+//         }
+//     })
+// });
+
 $('#login_form, #registration_form')
     .children('p')
     .children(`input[type*='text'], input[type*='password'], input[type*='email']`)

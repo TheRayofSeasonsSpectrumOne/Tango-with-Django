@@ -13,7 +13,21 @@
         crossorigin="anonymous">
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css"
         rel="stylesheet">
-    <link href="{% static 'css/global.css' %}" rel="stylesheet" >
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+
+    {% if user.is_authenticated %}
+        {% if dark_mode %}
+            {% if dark_mode is True %}
+                <link rel="stylesheet" href="{% static 'css/dark_mode.css' %}">
+            {% endif %}
+        {% endif %}
+
+        <style>
+            :root {
+                background-image: url("{{ MEDIA_URL }}{{ background_image }}")
+            }
+        </style>
+    {% endif %}
     
     {% block local_styles %}
     {% endblock %}
@@ -55,14 +69,22 @@
                 </ul>
                 <ul class="navbar-nav ml-auto mr-3">
                     {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <img src="{{ MEDIA_URL }}{{ current_user.picture }}" 
+                            width="25"
+                            height="25"
+                            class="my-1"
+                            alt="{{ selecteduser.username }}">
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" 
                             id="navbarDropdown" role="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             {{ user.username }}
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu gray-on-dark" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{% url 'rango:profile' user.username %}">Profile</a>
+                            <a class="dropdown-item" href="{% url 'rango:settings' user.username %}">Settings</a>
                             <div class="dropdown-divider" href=""></div>
                             <a class="dropdown-item" href="{% url 'auth_logout' %}">Logout</a>
                         </div>
@@ -80,10 +102,14 @@
         </nav>
     </header>
 
-    <div class="container-fluid">
+    <div class="content-body container-fluid">
         <div class="row">
-            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-                <div class="sidebar-sticky">
+            {% if dark_mode is True %}
+                <nav class="col-md-2 d-none d-md-block sidebar bg-dark">
+            {% else %}
+                <nav class="col-md-2 d-none d-md-block sidebar bg-light">
+            {% endif %}
+                <div class="sidebar-sticky gray-on-dark">
                     <div>
                         <input type="search" class="form-control ds-input" 
                             id="suggestion" placeholder="Search...">

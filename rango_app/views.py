@@ -5,11 +5,41 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 from django.views import View
 from django.urls import reverse
-from rango_app.models import Category, Page, UserProfile
-from rango_app.forms import CategoryForm, PageForm, UserProfileForm
+from rango_app.models import Category, Page, UserProfile, Theme
+from rango_app.forms import CategoryForm, PageForm, UserProfileForm, ThemeForm
 from rango_app.google_search import google_search
 from datetime import datetime
+from django.contrib.sessions.models import Session
+from django.views.decorators.csrf import csrf_exempt
 import json
+
+# helper functions
+def get_user(username):
+    try:
+        user = User.objects.get(username=username)
+        return user
+    except User.DoesNotExist:
+        pass
+
+def get_user_theme(username):
+    user = get_user(username)
+    theme = Theme.objects.get_or_create(user=user)[0]
+    return theme
+
+#modified render
+def render_with_user(request, template, context={}, username=''):
+    try:
+        user = get_user(request.user)
+        theme = get_user_theme(request.user)
+        current_user = UserProfile.objects.get_or_create(user=user)[0]
+
+        context['current_user'] = current_user
+        context['dark_mode'] = theme.dark_mode
+        context['background_image'] = theme.background_image
+    except User.DoesNotExist:
+        pass
+
+    return render(request, template, context)
 
 # cookie managers
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -48,9 +78,11 @@ class IndexView(View):
             'top_viewed_pages': top_viewed_pages,
             'visits': request.session['visits'],
             'last_visit': request.session['last_visit'],
+            'dark_mode': request.COOKIES['dark_mode']
+            # 'current_user': request.session['current_user']
         }
 
-        return render(request, 'rango/index.html', context)
+        return render_with_user(request, 'rango/index.html', context)
 
     def get(self, request):
         return self.view(request)
@@ -58,6 +90,34 @@ class IndexView(View):
     def post(self, request):
         return self.view(request)
 
+class SettingsView(View):
+
+    @method_decorator(login_required)
+    def get(self, request, username):
+        theme = get_user_theme(username)
+        form = ThemeForm({ 'dark_mode': theme.dark_mode })
+
+        context = { 'form': form }
+        print(theme.dark_mode)
+        return render_with_user(request, 'rango/settings.html', 
+            context=context, username=username)
+
+    @method_decorator(login_required)
+    def post(self, request, username):
+        theme = get_user_theme(username)
+        form = ThemeForm(request.POST, request.FILES, instance=theme)
+
+        if form.is_valid():
+            form.save(commit=True)
+        else:
+            print(form.errors)
+
+        context = { 'form': form }
+        print(theme.dark_mode)
+
+        return render_with_user(request, 'rango/settings.html', 
+            context=context, username=username)
+        
 class AboutView(View):
     def get(self, request):
         visitor_cookie_handler(request)
@@ -68,14 +128,14 @@ class AboutView(View):
             """
         }
 
-        return render(request, 'rango/about.html', context)
+        return render_with_user(request, 'rango/about.html', context)
 
 class AddCategoryView(View):
 
     @method_decorator(login_required)
     def get(self,request):
         form = CategoryForm()
-        return render(request, 'rango/add_category.html', {'form': form})
+        return render_with_user(request, 'rango/add_category.html', {'form': form})
     
     @method_decorator(login_required)
     def post(self, request):
@@ -87,12 +147,12 @@ class AddCategoryView(View):
         else:
             print(form.errors)
 
-        return render(request, 'rango/add_category.html', {'form': form})
+        return render_with_user(request, 'rango/add_category.html', {'form': form})
 
 class ProfileView(View):
     def get_user_details(self, username):
         try:
-            user = User.objects.get(username=username)
+            user = get_user(username)
         except User.DoesNotExist:
             return IndexView.as_view()(self.request)
 
@@ -120,7 +180,7 @@ class ProfileView(View):
             'form': form
         }
         
-        return render(request, 'rango/profile.html', context)
+        return render_with_user(request, 'rango/profile.html', context)
 
     @method_decorator(login_required)
     def post(self, request, username):
@@ -139,13 +199,13 @@ class ProfileView(View):
         else:
             print(form.errors)
 
-        return render(request, 'rango/profile.html', context)
+        return render_with_user(request, 'rango/profile.html', context)
 
 class GetCategoriesView(View):
     def get(self, request):
         category_list = Category.objects.all()
         context = { 'categories': category_list }
-        return render(request, 'rango/categories.html', context)
+        return render_with_user(request, 'rango/categories.html', context)
 
 class ShowCategoryView(View):
 
@@ -155,11 +215,11 @@ class ShowCategoryView(View):
             pages = Page.objects.filter(category=category).order_by('-views')
             context["pages"]=pages
             context["category"]=category
+            context['query'] = category.name
         except Category.DoesNotExist:
             context["category"]= None
             context["pages"]= None
 
-        context['query'] = category.name
 
     def increment_category_views(self, slug):
         try:
@@ -175,7 +235,7 @@ class ShowCategoryView(View):
         self.insert_category_context(request, context, category_name_slug)
         self.increment_category_views(category_name_slug)
 
-        return render(request, "rango/category.html", context)
+        return render_with_user(request, "rango/category.html", context)
 
     def post(self, request, category_name_slug):
         context = {}
@@ -191,12 +251,12 @@ class ShowCategoryView(View):
                 context['result_list'] = result_list
         self.increment_category_views(category_name_slug)
 
-        return render(request, "rango/category.html", context)
+        return render_with_user(request, "rango/category.html", context)
 
 class CheckAllCategories(View):
     def get(self, request):
         context = { 'categories': Category.objects.order_by('-views')}
-        return render(request, "rango/categories.html", context)
+        return render_with_user(request, "rango/categories.html", context)
 
 class AddPageView(View):
     def get(self, request, category_name_slug):
@@ -208,7 +268,7 @@ class AddPageView(View):
         form = PageForm()
 
         context = { 'form': form, 'category': category }
-        return render(request, 'rango/add_page.html', context)
+        return render_with_user(request, 'rango/add_page.html', context)
 
     def post(self, request, category_name_slug):
         try:
@@ -232,7 +292,7 @@ class AddPageView(View):
                     print(form.errors)
 
         context = { 'form': form, 'category': category }
-        return render(request, 'rango/add_page.html', context)
+        return render_with_user(request, 'rango/add_page.html', context)
 
 class AutoAddPageView(View):
     @method_decorator(login_required)
@@ -257,7 +317,7 @@ class AutoAddPageView(View):
             pages = Page.objects.filter(category=category).order_by('-views')
             context['pages'] = pages
 
-        return render(request, 'rango/page_list.html', context)
+        return render_with_user(request, 'rango/page_list.html', context)
 
 class SearchView(View):
     def post(self, request):
@@ -267,7 +327,7 @@ class SearchView(View):
             'results': google_search(search_term)
         }
 
-        return render(request, "rango/search.html", context)
+        return render_with_user(request, "rango/search.html", context)
 
 # if error occurs in goto, reinitialize url for post
 class Goto_Url(View):
@@ -297,7 +357,7 @@ class RegisterProfile(View):
         form = UserProfileForm()
         context = { 'form': form }
 
-        return render(request, 'rango/profile_registration.html', context)
+        return render_with_user(request, 'rango/profile_registration.html', context)
 
     @method_decorator(login_required)
     def post(self, request):
@@ -315,14 +375,14 @@ class RegisterProfile(View):
         
         context = { 'form': form }
 
-        return render(request, 'rango/profile_registration.html', context)
+        return render_with_user(request, 'rango/profile_registration.html', context)
 
 class ListProfiles(View):
     @method_decorator(login_required)
     def get(self, request):
         userprofile_list = UserProfile.objects.all()
         context = {'userprofile_list': userprofile_list}
-        return render(request, 'rango/list_profiles.html', context)
+        return render_with_user(request, 'rango/list_profiles.html', context)
 
 class SearchProfiles(View):
     def get(self, request):
@@ -340,7 +400,7 @@ class SearchProfiles(View):
 
             context['userprofile_list'] = filtered
 
-        return render(request, 'rango/profile_collection.html', context)
+        return render_with_user(request, 'rango/profile_collection.html', context)
 
 class LikeCategory(View):
     @method_decorator(login_required)
@@ -383,4 +443,4 @@ class SuggestCategoryView(View):
             'categories': cat_list
         }
 
-        return render(request, 'rango/category_list.html', context)
+        return render_with_user(request, 'rango/category_list.html', context)

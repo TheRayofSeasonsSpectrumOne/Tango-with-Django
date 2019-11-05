@@ -1,0 +1,24 @@
+:root, .content-body {
+    background-color: #2c2c2c;
+}
+
+.card, .gray-on-dark, 
+input[type="text"], input[type="text"]:focus,
+input[type="password"], input[type="password"]:focus,
+input[type="email"], input[type="email"]:focus,
+input[type="url"], input[type="url"]:focus {
+    color: #ffffff;
+    background-color: #525252;
+}
+
+.card a, .gray-on-dark a{
+    color: #ffffff;
+}
+
+.content-body, .sidebar-link {
+    color: #ffffff;
+}
+
+nav li a:not(.active){
+    color: white !important;
+}
