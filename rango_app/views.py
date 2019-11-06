@@ -28,16 +28,18 @@ def get_user_theme(username):
 
 #modified render
 def render_with_user(request, template, context={}, username=''):
-    try:
-        user = get_user(request.user)
-        theme = get_user_theme(request.user)
-        current_user = UserProfile.objects.get_or_create(user=user)[0]
 
-        context['current_user'] = current_user
-        context['dark_mode'] = theme.dark_mode
-        context['theme'] = theme
-    except User.DoesNotExist:
-        pass
+    if request.user.is_authenticated():
+        try:
+            user = get_user(request.user)
+            theme = get_user_theme(request.user)
+            current_user = UserProfile.objects.get_or_create(user=user)[0]
+
+            context['current_user'] = current_user
+            context['dark_mode'] = theme.dark_mode
+            context['theme'] = theme
+        except User.DoesNotExist:
+            pass
 
     return render(request, template, context)
 
