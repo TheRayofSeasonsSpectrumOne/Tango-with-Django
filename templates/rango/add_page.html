@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="mb-5">Add Page for category: {{ category.name }}</h1>
+    <h1 class="mb-5 shadow-on-background">
+        Add Page for category: {{ category.name }}
+    </h1>
     <div>
         <form class="form-group" id="add_page_form" method="post" 
             action="{% url 'rango:add_page' category.slug %}">
@@ -19,7 +21,7 @@
             {% endfor %}
             {% for field in form.visible_fields %}
                 {{ field.errors }}
-                {{ field.help_text }}
+                <p class="shadow-on-background">{{ field.help_text }}</p>
                 {{ field }}
             {% endfor %}
             <input type="submit" name="submit" value="Add Page">

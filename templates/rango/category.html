@@ -13,10 +13,11 @@
 {% block content %}
     <div class="mb-5">
         {% if category %}
-            <h1>{{ category.name }}</h1>
-            <p>Views: {{ category.views }}</p>
-            <div>
-                <strong id="like_count">{{ category.likes }}</strong> people like this category
+            <h1 class="shadow-on-background">{{ category.name }}</h1>
+            <p class="shadow-on-background">Views: {{ category.views }}</p>
+            <div class="shadow-on-background" >
+                <strong id="like_count">{{ category.likes }}</strong> 
+                    people like this category
                 {% if user.is_authenticated %}
                     <button id="likes" data-catid="{{ category.id }}"
                         class="btn btn-primary btn-sm" type="button">

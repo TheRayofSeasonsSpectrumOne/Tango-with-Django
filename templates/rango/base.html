@@ -28,6 +28,10 @@
             }
         </style>
     {% endif %}
+
+    {% if theme.background_image %}
+        <link rel="stylesheet" href="{% static 'css/background_image_support.css' %}">
+    {% endif %}
     
     {% block local_styles %}
     {% endblock %}
